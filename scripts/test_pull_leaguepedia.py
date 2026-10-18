@@ -34,13 +34,36 @@ class PullFromFixtures(unittest.TestCase):
     def test_tournament_selection(self):
         included = {t["overview_page"] for t in self.tournaments["included"]}
         excluded = {t["overview_page"]: t["reason"] for t in self.tournaments["excluded"]}
-        self.assertIn("Season 1 World Championship", included)
+        self.assertEqual(pl.classify_tournament(
+            {"OverviewPage": "Season 1 World Championship", "Year": "2011"}, 2026), ("worlds", None))
         self.assertIn("2024 Season World Championship/Play-In", included)
         self.assertIn("2025 First Stand", included)
         self.assertEqual(excluded["2023 Season World Championship/Qualifying Series"], "qualifier")
         self.assertEqual(excluded["Esports World Cup 2024"], "Esports World Cup")
         self.assertEqual(excluded["2015 All-Star Event"], "All-Stars")
         self.assertEqual(excluded["Rift Rivals/2019 Season/NA-EU"], "Rift Rivals")
+
+    def test_play_in_included_despite_is_qualifier(self):
+        included = {t["overview_page"] for t in self.tournaments["included"]}
+        excluded = {t["overview_page"]: t["reason"] for t in self.tournaments["excluded"]}
+        self.assertIn("2024 Season World Championship/Play-In", included)
+        self.assertIn("2026 Season World Championship/Play-In", included)  # name says "Qualifier"
+        # No included 2023 Worlds page, so this Play-In keeps its IsQualifier exclusion.
+        self.assertEqual(excluded["2023 Season World Championship/Play-In"], "qualifier (IsQualifier)")
+
+    def test_future_and_unplayed_excluded(self):
+        excluded = {t["overview_page"]: t["reason"] for t in self.tournaments["excluded"]}
+        self.assertIn("after the current year", excluded["2027 Mid-Season Invitational"])
+        self.assertEqual(excluded["Season 1 World Championship"], "no played matches yet")
+        self.assertEqual(excluded["2026 Season World Championship"], "no played matches yet")
+        self.assertNotIn("MSI2027_1", {s["match_id"] for s in self.matches["series"]})
+
+    def test_no_double_counting(self):
+        for kind, key in (("series", "match_id"), ("games", "game_id")):
+            ids = [x[key] for x in self.matches[kind]]
+            self.assertEqual(len(ids), len(set(ids)), kind)
+        series = next(s for s in self.matches["series"] if s["match_id"] == "Worlds2024_Swiss_R1_1")
+        self.assertEqual(series["tournament"], "2024 Season World Championship/Main Event")
 
     def test_lyon_vs_hle_games(self):
         games = [g for g in self.matches["games"]
@@ -85,7 +108,101 @@ class PullFromFixtures(unittest.TestCase):
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
             pl.report(self.out)
-        self.assertIn("Total NA games: 7-7", buf.getvalue())
+        out = buf.getvalue()
+        self.assertIn("Total NA games: 9-10", out)
+        self.assertIn("! 2024 Season World Championship ", out)  # parent page: duplicates only
+        self.assertIn("1 included tournament(s) with 0 NA games", out)
+
+
+class FakeResponse:
+    def __init__(self, body, status=200):
+        self.status_code, self.headers, self.text = status, {}, json.dumps(body)
+
+    def json(self):
+        return json.loads(self.text)
+
+
+class Login(unittest.TestCase):
+    USER, PASSWORD = "Someone@navsworld", "s3cret-bot-password"
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.saved = (pl.CACHE_DIR, pl.SLEEP_SECONDS)
+        pl.CACHE_DIR, pl.SLEEP_SECONDS = Path(self.tmp.name), 0
+        self.calls = []
+
+    def tearDown(self):
+        pl.CACHE_DIR, pl.SLEEP_SECONDS = self.saved
+        self.tmp.cleanup()
+
+    def client(self, env, login_result="Success"):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            c = pl.LiveClient(env=env)
+        c.session.get = lambda url, params, timeout: self._get(params)
+        c.session.post = lambda url, data, timeout: self._post(data, login_result)
+        return c, out, err
+
+    def _get(self, params):
+        self.calls.append(("GET", params))
+        if params.get("meta") == "tokens":
+            return FakeResponse({"query": {"tokens": {"logintoken": "tok+\\"}}})
+        return FakeResponse({"cargoquery": [{"title": {"A": "1"}}]})
+
+    def _post(self, data, result):
+        self.calls.append(("POST", data))
+        return FakeResponse({"login": {"result": result, "reason": f"bad login for {data['lgname']}"}})
+
+    def run_query(self, c):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            rows = pl.cargo_rows(c, "t", "T", "T.A=A", "1=1", "T.A")
+            pl.cargo_rows(c, "u", "T", "T.A=A", "2=2", "T.A")
+        return rows, out.getvalue() + err.getvalue()
+
+    def test_logs_in_once_then_queries_on_same_session(self):
+        c, out, err = self.client({pl.ENV_USER: self.USER, pl.ENV_PASSWORD: self.PASSWORD})
+        rows, logs = self.run_query(c)
+        self.assertEqual(rows, [{"A": "1"}])
+        kinds = [(m, p.get("action"), p.get("meta")) for m, p in self.calls]
+        self.assertEqual(kinds, [("GET", "query", "tokens"), ("POST", "login", None),
+                                 ("GET", "cargoquery", None), ("GET", "cargoquery", None)])
+        login = self.calls[1][1]
+        self.assertEqual((login["lgname"], login["lgpassword"], login["lgtoken"]),
+                         (self.USER, self.PASSWORD, "tok+\\"))
+        self.assertTrue(c.logged_in)
+        self.assertEqual(err.getvalue(), "")
+        self.assertNotIn(self.USER, logs)
+        self.assertNotIn(self.PASSWORD, logs)
+        for f in pl.CACHE_DIR.iterdir():
+            text = f.read_text()
+            self.assertNotIn(self.PASSWORD, text)
+            self.assertNotIn(self.USER, text)
+
+    def test_failed_login_does_not_print_credentials(self):
+        c, _, _ = self.client({pl.ENV_USER: self.USER, pl.ENV_PASSWORD: self.PASSWORD}, "Failed")
+        with self.assertRaises(pl.CargoError) as ctx:
+            self.run_query(c)
+        self.assertIn("result: Failed", str(ctx.exception))
+        self.assertNotIn(self.USER, str(ctx.exception))
+        self.assertNotIn(self.PASSWORD, str(ctx.exception))
+
+    def test_anonymous_when_unset_warns_once(self):
+        c, _, err = self.client({pl.ENV_USER: self.USER})
+        self.assertEqual(err.getvalue().count("warning"), 1)
+        self.assertIn(pl.ENV_PASSWORD, err.getvalue())
+        self.assertNotIn(self.USER, err.getvalue())
+        _, logs = self.run_query(c)
+        self.assertNotIn("warning", logs)
+        self.assertEqual([p.get("action") for _, p in self.calls], ["cargoquery", "cargoquery"])
+
+    def test_cached_calls_skip_login(self):
+        env = {pl.ENV_USER: self.USER, pl.ENV_PASSWORD: self.PASSWORD}
+        self.run_query(self.client(env)[0])
+        self.calls.clear()
+        c, _, _ = self.client(env)
+        self.run_query(c)
+        self.assertEqual(self.calls, [])
 
 
 if __name__ == "__main__":

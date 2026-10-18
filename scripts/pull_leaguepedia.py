@@ -7,6 +7,11 @@ Usage:
     python3 scripts/pull_leaguepedia.py --refresh  # pull, ignoring the cache
     python3 scripts/pull_leaguepedia.py --report   # summarize data/matches.json
 
+Login: set LEAGUEPEDIA_USER ("Name@navsworld", from Special:BotPasswords) and
+LEAGUEPEDIA_BOT_PASSWORD in the environment. They are read from the
+environment only, never printed, and never written to the cache. If they are
+unset, the script warns once and runs anonymously, which is rate-limited.
+
 ---------------------------------------------------------------------------
 CARGO TABLES AND FIELDS USED
 ---------------------------------------------------------------------------
@@ -23,6 +28,10 @@ Tournaments (one row per tournament page)
     Used to pick events. Candidates come from LIKE filters on League, Name
     and OverviewPage. Each candidate is then included or excluded by the
     OverviewPage patterns in EVENT_RULES and the keywords in EXCLUDE_PATTERNS.
+    * Play-In subpages (".../Play-In") of an included Worlds or MSI event are
+      included even if IsQualifier is set or their name says qualifier.
+    * Events with Year after the current (ET) year are excluded.
+    * Events with no played MatchSchedule rows are excluded.
 
 TournamentRosters (one row per team per tournament page)
     required: Team, OverviewPage, Region
@@ -41,6 +50,10 @@ ScoreboardGames (one row per game played, with stats; no remakes)
               DateTime_UTC, N_GameInMatch
     optional: Winner
     Joined to series on MatchId.
+
+Series are de-duplicated by MatchId and games by GameId. If an id appears
+under several pages (e.g. a parent page and its "/Main Event"), the most
+specific page wins.
 
 How NA status is decided (never guessed):
     * Region in NA_REGIONS ("North America", ...)  -> NA
@@ -66,6 +79,7 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import re
 import sys
 import time
@@ -77,6 +91,8 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 API_URL = "https://lol.fandom.com/api.php"
 WIKI_URL = "https://lol.fandom.com/wiki/"
+ENV_USER = "LEAGUEPEDIA_USER"  # bot password user, e.g. "Name@navsworld"
+ENV_PASSWORD = "LEAGUEPEDIA_BOT_PASSWORD"
 USER_AGENT = "na-vs-world personal fan project (github.com/parkerjustinr/na-vs-world)"
 PAGE_LIMIT = 500
 SLEEP_SECONDS = 2.0
@@ -152,9 +168,14 @@ class CargoError(RuntimeError):
 # --------------------------------------------------------------------------
 
 class LiveClient:
-    """Polite Cargo client: one request at a time, 2s apart, cached, backoff."""
+    """Polite Cargo client: one request at a time, 2s apart, cached, backoff.
 
-    def __init__(self, refresh=False):
+    Logs in with a bot password from LEAGUEPEDIA_USER / LEAGUEPEDIA_BOT_PASSWORD
+    (environment only) before its first network request, and uses that one
+    session for every call. Credentials are never printed, logged or cached.
+    """
+
+    def __init__(self, refresh=False, env=None):
         import requests  # only needed for live pulls
         self.requests = requests
         self.session = requests.Session()
@@ -163,6 +184,15 @@ class LiveClient:
         self.last_call = 0.0
         self.live_calls = 0
         self.cached_calls = 0
+        self.logged_in = False
+        env = os.environ if env is None else env
+        self._user = env.get(ENV_USER) or ""
+        self._password = env.get(ENV_PASSWORD) or ""
+        if not (self._user and self._password):
+            missing = [n for n, v in ((ENV_USER, self._user), (ENV_PASSWORD, self._password)) if not v]
+            print(f"warning: {' and '.join(missing)} not set; running anonymously "
+                  "(anonymous Cargo calls are rate-limited)", file=sys.stderr)
+            self._user = self._password = ""
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     def get(self, params, name):
@@ -172,12 +202,30 @@ class LiveClient:
         if not self.refresh and path.exists():
             self.cached_calls += 1
             return json.loads(path.read_text(encoding="utf-8"))
+        if self._user and not self.logged_in:
+            self._login()
         text, data = self._fetch(params)
         path.write_text(text, encoding="utf-8")
         self.live_calls += 1
         return data
 
-    def _fetch(self, params):
+    def _login(self):
+        _, data = self._fetch({"action": "query", "meta": "tokens", "type": "login", "format": "json"})
+        token = data.get("query", {}).get("tokens", {}).get("logintoken")
+        if not token:
+            raise CargoError("login failed: no login token returned")
+        _, data = self._fetch(None, form={"action": "login", "lgname": self._user,
+                                          "lgpassword": self._password, "lgtoken": token,
+                                          "format": "json"})
+        result = data.get("login", {}).get("result")
+        if result != "Success":
+            # The server's reason text is not printed: it can echo the user name.
+            raise CargoError(f"login failed (result: {result}). Check {ENV_USER} and {ENV_PASSWORD}.")
+        self.logged_in = True
+        print("Logged in to Leaguepedia with a bot password.")
+
+    def _fetch(self, params, form=None):
+        """GET params, or POST form (login; its body never appears in errors)."""
         error = ""
         for attempt in range(MAX_ATTEMPTS):
             wait = SLEEP_SECONDS - (time.monotonic() - self.last_call)
@@ -185,9 +233,12 @@ class LiveClient:
                 time.sleep(wait)
             retry_after = 0.0
             try:
-                resp = self.session.get(API_URL, params=params, timeout=60)
+                if form is None:
+                    resp = self.session.get(API_URL, params=params, timeout=60)
+                else:
+                    resp = self.session.post(API_URL, data=form, timeout=60)
             except self.requests.RequestException as exc:
-                error = f"network error: {exc}"
+                error = f"network error: {type(exc).__name__}" if form else f"network error: {exc}"
             else:
                 if resp.status_code == 429 or resp.status_code >= 500:
                     error = f"HTTP {resp.status_code}"
@@ -196,7 +247,8 @@ class LiveClient:
                     except ValueError:
                         pass
                 elif resp.status_code != 200:
-                    raise CargoError(f"HTTP {resp.status_code}: {resp.text[:300]}")
+                    body = "" if form else f": {resp.text[:300]}"
+                    raise CargoError(f"HTTP {resp.status_code}{body}")
                 else:
                     try:
                         data = resp.json()
@@ -207,7 +259,7 @@ class LiveClient:
                         if not api_error:
                             return resp.text, data
                         if api_error.get("code") not in RETRYABLE_API_ERRORS:
-                            raise CargoError(f"API error: {api_error}")
+                            raise CargoError(f"API error: {api_error.get('code') if form else api_error}")
                         error = f"API error {api_error.get('code')}"
             finally:
                 self.last_call = time.monotonic()
@@ -329,7 +381,26 @@ def year_of(row):
     return int(m.group(1)) if len(m.group(1)) == 4 else 2010 + int(m.group(1))
 
 
-def classify_tournament(row):
+def event_type_of(page):
+    for event_type, pattern, min_year in EVENT_RULES:
+        if pattern.match(page):
+            return event_type, min_year
+    return None, None
+
+
+def check_year(row, event_type, min_year, current_year):
+    """Return an exclusion reason for the row's year, or None if it is in range."""
+    year = year_of(row)
+    if year is None:
+        return "no year"
+    if year < min_year:
+        return f"{event_type} before {min_year}"
+    if year > current_year:
+        return f"Year {year} is after the current year ({current_year})"
+    return None
+
+
+def classify_tournament(row, current_year):
     """Return (event_type, None) to include or (None, reason) to exclude."""
     page = row.get("OverviewPage", "")
     text = " ".join(str(row.get(k, "")) for k in ("Name", "OverviewPage", "League"))
@@ -340,31 +411,47 @@ def classify_tournament(row):
         return None, "qualifier (IsQualifier)"
     if str(row.get("TournamentLevel", "")).strip().lower() == "showmatch":
         return None, "showmatch (TournamentLevel)"
-    for event_type, pattern, min_year in EVENT_RULES:
-        if pattern.match(page):
-            year = year_of(row)
-            if year is None:
-                return None, "no year"
-            if year < min_year:
-                return None, f"{event_type} before {min_year}"
-            return event_type, None
-    return None, "not Worlds/MSI/First Stand"
+    event_type, min_year = event_type_of(page)
+    if not event_type:
+        return None, "not Worlds/MSI/First Stand"
+    reason = check_year(row, event_type, min_year, current_year)
+    return (None, reason) if reason else (event_type, None)
 
 
-def select_tournaments(client, fields):
+def page_root(page):
+    return page.split("/", 1)[0]
+
+
+def select_tournaments(client, fields, current_year):
+    """Pick candidate events. Play-In subpages of an included Worlds/MSI event
+    are included whatever their IsQualifier flag or name says. Events with no
+    played matches are dropped later, in drop_unplayed()."""
     likes = " OR ".join(f'T.{col} LIKE "%{text}%"'
                         for text in CANDIDATE_LIKES
                         for col in ("League", "Name", "OverviewPage"))
     rows = cargo_rows(client, "tournaments", "Tournaments=T",
                       field_list("Tournaments", fields["Tournaments"]),
                       likes, "T.OverviewPage")
-    included, excluded, seen = [], [], set()
+    unique, decisions = {}, {}
     for row in rows:
         page = row.get("OverviewPage", "")
-        if not page or page in seen:
+        if page and page not in unique:
+            unique[page] = row
+            decisions[page] = classify_tournament(row, current_year)
+
+    play_in_roots = {page_root(page) for page, (event_type, _) in decisions.items()
+                     if event_type in ("worlds", "msi")}
+    for page, (event_type, reason) in decisions.items():
+        if event_type or not page.endswith("/Play-In") or page_root(page) not in play_in_roots:
             continue
-        seen.add(page)
-        event_type, reason = classify_tournament(row)
+        event_type, min_year = event_type_of(page)
+        if event_type in ("worlds", "msi"):
+            year_reason = check_year(unique[page], event_type, min_year, current_year)
+            decisions[page] = (None, year_reason) if year_reason else (event_type, None)
+
+    included, excluded = [], []
+    for page, row in unique.items():
+        event_type, reason = decisions[page]
         base = {"overview_page": page, "name": row.get("Name", ""),
                 "league": row.get("League", ""), "year": year_of(row)}
         if event_type:
@@ -375,6 +462,33 @@ def select_tournaments(client, fields):
             excluded.append({**base, "reason": reason})
     sort_key = lambda t: (t["year"] or 0, t["overview_page"])
     return sorted(included, key=sort_key), sorted(excluded, key=sort_key)
+
+
+def drop_unplayed(included, excluded, match_rows):
+    """Move included events with no played (winner set) MatchSchedule rows to excluded."""
+    played = {m.get("OverviewPage") for m in match_rows
+              if str(m.get("Winner") or "").strip() in ("1", "2")}
+    kept = [t for t in included if t["overview_page"] in played]
+    for t in included:
+        if t["overview_page"] not in played:
+            excluded.append({k: t[k] for k in ("overview_page", "name", "league", "year")}
+                            | {"reason": "no played matches yet"})
+    excluded.sort(key=lambda t: (t["year"] or 0, t["overview_page"]))
+    return kept, excluded
+
+
+def pick_by_id(rows, id_field):
+    """One row per id. If an id appears under several pages (e.g. a parent page
+    and its /Main Event), keep the most specific page so nothing double-counts."""
+    best = {}
+    for row in rows:
+        key = row.get(id_field, "")
+        if not key:
+            continue
+        rank = (row.get("OverviewPage", "").count("/"), row.get("OverviewPage", ""))
+        if key not in best or rank > best[key][0]:
+            best[key] = (rank, row)
+    return [row for _, row in best.values()]
 
 
 def parse_utc(value):
@@ -391,7 +505,7 @@ def eastern():
     try:
         return ZoneInfo("America/New_York")
     except ZoneInfoNotFoundError:
-        sys.exit("No time zone data for America/New_York. On Windows run: pip install tzdata")
+        sys.exit("No time zone data for America/New_York. On Windows run: py -m pip install tzdata")
 
 
 def date_et(dt, tz):
@@ -478,20 +592,12 @@ def fetch_league_rosters(client, tournaments, roster_rows):
 def build_matches(tournaments, match_rows, game_rows, resolver, tz):
     by_page = {t["overview_page"]: t for t in tournaments}
     games_by_match = defaultdict(list)
-    seen_games = set()
-    for g in game_rows:
-        gid = g.get("GameId", "")
-        if gid and gid not in seen_games:
-            seen_games.add(gid)
-            games_by_match[g.get("MatchId", "")].append(g)
+    for g in pick_by_id(game_rows, "GameId"):
+        games_by_match[g.get("MatchId", "")].append(g)
 
     series, games, notes = [], [], defaultdict(list)
-    seen_matches = set()
-    for m in match_rows:
+    for m in pick_by_id([m for m in match_rows if m.get("OverviewPage") in by_page], "MatchId"):
         match_id = m.get("MatchId", "")
-        if not match_id or match_id in seen_matches:
-            continue
-        seen_matches.add(match_id)
         page = m.get("OverviewPage", "")
         tour = by_page.get(page)
         if not tour:
@@ -607,7 +713,12 @@ def pull(client, data_dir):
     fields = verify_fields(client)
 
     print("Selecting tournaments...")
-    included, excluded = select_tournaments(client, fields)
+    current_year = datetime.now(tz).year
+    included, excluded = select_tournaments(client, fields, current_year)
+    print("Fetching series...")
+    match_rows = rows_for_pages(client, "matches", "MatchSchedule", fields["MatchSchedule"],
+                                [t["overview_page"] for t in included], "MS.DateTime_UTC, MS.MatchId")
+    included, excluded = drop_unplayed(included, excluded, match_rows)
     print(f"\nINCLUDED ({len(included)}):")
     for t in included:
         print(f"  + [{t['event_type']:<11}] {t['year']}  {t['overview_page']}")
@@ -620,12 +731,10 @@ def pull(client, data_dir):
     })
 
     pages = [t["overview_page"] for t in included]
-    print("\nFetching rosters, series and games...")
+    print("\nFetching rosters and games...")
     rosters = rows_for_pages(client, "rosters", "TournamentRosters", fields["TournamentRosters"],
                              pages, "TR.OverviewPage, TR.Team")
     league_rosters = fetch_league_rosters(client, included, rosters)
-    match_rows = rows_for_pages(client, "matches", "MatchSchedule", fields["MatchSchedule"],
-                                pages, "MS.DateTime_UTC, MS.MatchId")
     game_rows = rows_for_pages(client, "games", "ScoreboardGames", fields["ScoreboardGames"],
                                pages, "SG.DateTime_UTC, SG.GameId")
 
@@ -686,6 +795,33 @@ def report(data_dir):
     for (year, event), (n_s, n_g) in sorted(counts.items()):
         print(f"  {year:<6}{event:<13}{n_s:>7}{n_g:>7}")
 
+    print("\n1b. NA series and games per tournament (! = included tournament with 0 games)")
+    per_page = defaultdict(lambda: [0, 0])
+    for s in series:
+        per_page[s["tournament"]][0] += 1
+    for g in games:
+        s = by_id.get(g["match_id"])
+        if s:
+            per_page[s["tournament"]][1] += 1
+    tournaments_path = data_dir / "tournaments.json"
+    included = []
+    if tournaments_path.exists():
+        included = json.loads(tournaments_path.read_text(encoding="utf-8")).get("included", [])
+    else:
+        print(f"  ({tournaments_path} not found; listing only tournaments in matches.json)")
+    years = {t["overview_page"]: t["year"] for t in included}
+    years.update({s["tournament"]: s["year"] for s in series})
+    for page in sorted(years, key=lambda p: (years[p] or 0, p)):
+        n_s, n_g = per_page[page]
+        flag = "!" if n_g == 0 else " "
+        print(f"  {flag} {page:<55}{n_s:>5} series{n_g:>5} games")
+    zero = [p for p in years if per_page[p][1] == 0]
+    print(f"  {len(zero)} included tournament(s) with 0 NA games")
+    for kind, key in (("series", "match_id"), ("games", "game_id")):
+        dupes = [k for k, n in Counter(x[key] for x in data[kind]).items() if n > 1]
+        if dupes:
+            print(f"  WARNING: duplicate {key}s in {kind}: {dupes[:10]}")
+
     wins = sum(g["result"] == "W" for g in games)
     print(f"\n2. Total NA games: {wins}-{len(games) - wins} (W-L)")
 
@@ -733,7 +869,7 @@ def report(data_dir):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--refresh", action="store_true", help="ignore scripts/.cache/ and refetch")
-    parser.add_argument("--report", action="store_true", help="summarize data/matches.json and exit")
+    parser.add_argument("--report", action="store_true", help="summarize data/matches.json (and data/tournaments.json) and exit")
     parser.add_argument("--fixtures", metavar="DIR", help="offline: serve hand-written responses from DIR")
     parser.add_argument("--data-dir", metavar="DIR", default=str(DEFAULT_DATA_DIR),
                         help="where JSON is written/read (default: data/)")

@@ -47,19 +47,27 @@ Swiss format rule: `Bo3` when wins or losses equal 2, otherwise `Bo1`. The page 
 
 ## Pulling data
 
-`scripts/pull_leaguepedia.py` pulls every series and game an NA team played at a Riot international (Worlds from 2011, MSI from 2015, First Stand from 2025) from Leaguepedia's Cargo API. It writes `data/tournaments.json` (which events were included or excluded, and why) and `data/matches.json`. Its only dependency is `requests`.
+`scripts/pull_leaguepedia.py` pulls every series and game an NA team played at a Riot international (Worlds from 2011, MSI from 2015, First Stand from 2025) from Leaguepedia's Cargo API. It writes `data/tournaments.json` (which events were included or excluded, and why) and `data/matches.json`. It needs `requests`, plus `tzdata` on Windows, which has no built-in time zone data.
 
-```sh
-pip install requests
-python3 scripts/pull_leaguepedia.py
-python3 scripts/pull_leaguepedia.py --report
+Windows (cmd):
+
+```bat
+py -m pip install requests tzdata
+set LEAGUEPEDIA_USER=Name@navsworld
+set LEAGUEPEDIA_BOT_PASSWORD=your-bot-password
+py scripts\pull_leaguepedia.py
+py scripts\pull_leaguepedia.py --report
 ```
+
+macOS/Linux: `python3 -m pip install requests`, then `export` the same two variables and run `python3 scripts/pull_leaguepedia.py`.
+
+Login is optional but recommended, because anonymous Cargo calls are rate-limited. Create a bot password at https://lol.fandom.com/wiki/Special:BotPasswords. `LEAGUEPEDIA_USER` is the `Name@botname` it shows. Read-only access is enough. The script reads the two variables from the environment only and never prints them. `set` lasts only for that cmd window. Don't put the password in a file in this repo. If either variable is unset, the script warns and runs anonymously.
 
 - Raw API responses are cached in `scripts/.cache/` (gitignored). `--refresh` ignores the cache.
 - Requests are paced 2s apart and back off on errors or rate limits.
 - Before querying, the script checks its field names against Leaguepedia (`action=cargofields`). If a field it needs is missing, it stops and prints the real field list.
 - Teams whose NA status can't be determined go in `unresolved`, never guessed.
-- `--report` reads only `data/matches.json`.
+- `--report` reads only `data/matches.json` and `data/tournaments.json`. It also lists series and game counts per tournament and flags included tournaments with 0 games.
 - Offline parser tests on synthetic fixtures: `python3 -m unittest discover -s scripts`
 
 ## Test URL params
