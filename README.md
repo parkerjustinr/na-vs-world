@@ -45,6 +45,32 @@ One entry per LCS team, in display order. For each team update `wins`, `losses` 
 
 Swiss format rule: `Bo3` when wins or losses equal 2, otherwise `Bo1`. The page logs a console warning if `next.format` disagrees.
 
+## Pulling data
+
+`scripts/pull_leaguepedia.py` pulls every series and game an NA team played at a Riot international (Worlds from 2011, MSI from 2015, First Stand from 2025) from Leaguepedia's Cargo API. It writes `data/tournaments.json` (which events were included or excluded, and why) and `data/matches.json`. It needs `requests`, plus `tzdata` on Windows, which has no built-in time zone data.
+
+Windows (cmd):
+
+```bat
+py -m pip install requests tzdata
+set LEAGUEPEDIA_USER=Name@navsworld
+set LEAGUEPEDIA_BOT_PASSWORD=your-bot-password
+py scripts\pull_leaguepedia.py
+py scripts\pull_leaguepedia.py --report
+```
+
+macOS/Linux: `python3 -m pip install requests`, then `export` the same two variables and run `python3 scripts/pull_leaguepedia.py`.
+
+Login is optional but recommended, because anonymous Cargo calls are rate-limited. Create a bot password at https://lol.fandom.com/wiki/Special:BotPasswords. `LEAGUEPEDIA_USER` is the `Name@botname` it shows. Read-only access is enough. The script reads the two variables from the environment only and never prints them. `set` lasts only for that cmd window. Don't put the password in a file in this repo. If either variable is unset, the script warns and runs anonymously.
+
+- Raw API responses are cached in `scripts/.cache/` (gitignored). `--refresh` ignores the cache.
+- Requests are paced 2s apart and back off on errors or rate limits.
+- Before querying, the script checks its field names against Leaguepedia (`action=cargofields`). If a field it needs is missing, it stops and prints the real field list.
+- Teams whose NA status can't be determined go in `unresolved`, never guessed.
+- 2025 LTA teams have Leaguepedia region `AME` (North and South alike), so `data/team-regions.json` decides them: under `na_overrides` → `"2025"`, set each team to `true` (NA, LTA North) or `false`. Each pull adds any such team it finds with `null` and prints it. Teams that are `null` or not listed stay in `unresolved` until you fill them in. Re-run the pull after editing.
+- `--report` reads only `data/matches.json` and `data/tournaments.json`. It also lists, per tournament, series and game counts (flagging 0 games) and NA team names. It shows the most recent NA wins vs KR and vs CN separately, and every gap over 365 days between NA game wins vs KR/CN.
+- Offline parser tests on synthetic fixtures: `python3 -m unittest discover -s scripts`
+
 ## Test URL params
 
 - `?today=YYYY-MM-DD` uses that date as today (ET) for the counter.

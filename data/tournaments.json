@@ -1,0 +1,1498 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-18T04:11:39Z",
+  "source": "Leaguepedia Cargo API",
+  "included": [
+    {
+      "overview_page": "Season 1 World Championship",
+      "name": "Worlds Season 1",
+      "league": "World Championship",
+      "year": 2011,
+      "event_type": "worlds",
+      "date_start": "2011-06-18",
+      "date_end": "2011-06-20"
+    },
+    {
+      "overview_page": "Season 2 World Championship",
+      "name": "Worlds Season 2",
+      "league": "World Championship",
+      "year": 2012,
+      "event_type": "worlds",
+      "date_start": "2012-10-04",
+      "date_end": "2012-10-13"
+    },
+    {
+      "overview_page": "Season 3 World Championship",
+      "name": "Worlds Season 3",
+      "league": "World Championship",
+      "year": 2013,
+      "event_type": "worlds",
+      "date_start": "2013-09-15",
+      "date_end": "2013-10-04"
+    },
+    {
+      "overview_page": "2014 Season World Championship",
+      "name": "Worlds 2014",
+      "league": "World Championship",
+      "year": 2014,
+      "event_type": "worlds",
+      "date_start": "2014-09-18",
+      "date_end": "2014-10-19"
+    },
+    {
+      "overview_page": "2015 Mid-Season Invitational",
+      "name": "MSI 2015",
+      "league": "Mid-Season Invitational",
+      "year": 2015,
+      "event_type": "msi",
+      "date_start": "2015-05-07",
+      "date_end": "2015-05-10"
+    },
+    {
+      "overview_page": "2015 Season World Championship",
+      "name": "Worlds 2015",
+      "league": "World Championship",
+      "year": 2015,
+      "event_type": "worlds",
+      "date_start": "2015-10-01",
+      "date_end": "2015-10-31"
+    },
+    {
+      "overview_page": "2016 Mid-Season Invitational",
+      "name": "MSI 2016",
+      "league": "Mid-Season Invitational",
+      "year": 2016,
+      "event_type": "msi",
+      "date_start": "2016-05-04",
+      "date_end": "2016-05-15"
+    },
+    {
+      "overview_page": "2016 Season World Championship",
+      "name": "Worlds 2016",
+      "league": "World Championship",
+      "year": 2016,
+      "event_type": "worlds",
+      "date_start": "2016-09-29",
+      "date_end": "2016-10-29"
+    },
+    {
+      "overview_page": "2017 Mid-Season Invitational/Main Event",
+      "name": "MSI 2017 Main Event",
+      "league": "Mid-Season Invitational",
+      "year": 2017,
+      "event_type": "msi",
+      "date_start": "2017-05-10",
+      "date_end": "2017-05-21"
+    },
+    {
+      "overview_page": "2017 Mid-Season Invitational/Play-In",
+      "name": "MSI 2017 Play-In",
+      "league": "Mid-Season Invitational",
+      "year": 2017,
+      "event_type": "msi",
+      "date_start": "2017-04-28",
+      "date_end": "2017-05-06"
+    },
+    {
+      "overview_page": "2017 Season World Championship/Main Event",
+      "name": "Worlds 2017 Main Event",
+      "league": "World Championship",
+      "year": 2017,
+      "event_type": "worlds",
+      "date_start": "2017-10-05",
+      "date_end": "2017-11-04"
+    },
+    {
+      "overview_page": "2017 Season World Championship/Play-In",
+      "name": "Worlds 2017 Play-In",
+      "league": "World Championship",
+      "year": 2017,
+      "event_type": "worlds",
+      "date_start": "2017-09-23",
+      "date_end": "2017-09-29"
+    },
+    {
+      "overview_page": "2018 Mid-Season Invitational/Main Event",
+      "name": "MSI 2018 Main Event",
+      "league": "Mid-Season Invitational",
+      "year": 2018,
+      "event_type": "msi",
+      "date_start": "2018-05-11",
+      "date_end": "2018-05-20"
+    },
+    {
+      "overview_page": "2018 Mid-Season Invitational/Play-In",
+      "name": "MSI 2018 Play-In",
+      "league": "Mid-Season Invitational",
+      "year": 2018,
+      "event_type": "msi",
+      "date_start": "2018-05-03",
+      "date_end": "2018-05-09"
+    },
+    {
+      "overview_page": "2018 Season World Championship/Main Event",
+      "name": "Worlds 2018 Main Event",
+      "league": "World Championship",
+      "year": 2018,
+      "event_type": "worlds",
+      "date_start": "2018-10-10",
+      "date_end": "2018-11-03"
+    },
+    {
+      "overview_page": "2018 Season World Championship/Play-In",
+      "name": "Worlds 2018 Play-In",
+      "league": "World Championship",
+      "year": 2018,
+      "event_type": "worlds",
+      "date_start": "2018-10-01",
+      "date_end": "2018-10-07"
+    },
+    {
+      "overview_page": "2019 Mid-Season Invitational/Main Event",
+      "name": "MSI 2019 Main Event",
+      "league": "Mid-Season Invitational",
+      "year": 2019,
+      "event_type": "msi",
+      "date_start": "2019-05-10",
+      "date_end": "2019-05-19"
+    },
+    {
+      "overview_page": "2019 Mid-Season Invitational/Play-In",
+      "name": "MSI 2019 Play-In",
+      "league": "Mid-Season Invitational",
+      "year": 2019,
+      "event_type": "msi",
+      "date_start": "2019-05-01",
+      "date_end": "2019-05-07"
+    },
+    {
+      "overview_page": "2019 Season World Championship/Main Event",
+      "name": "Worlds 2019 Main Event",
+      "league": "World Championship",
+      "year": 2019,
+      "event_type": "worlds",
+      "date_start": "2019-10-12",
+      "date_end": "2019-11-10"
+    },
+    {
+      "overview_page": "2019 Season World Championship/Play-In",
+      "name": "Worlds 2019 Play-In",
+      "league": "World Championship",
+      "year": 2019,
+      "event_type": "worlds",
+      "date_start": "2019-10-02",
+      "date_end": "2019-10-08"
+    },
+    {
+      "overview_page": "2020 Season World Championship/Main Event",
+      "name": "Worlds 2020 Main Event",
+      "league": "World Championship",
+      "year": 2020,
+      "event_type": "worlds",
+      "date_start": "2020-10-03",
+      "date_end": "2020-10-31"
+    },
+    {
+      "overview_page": "2020 Season World Championship/Play-In",
+      "name": "Worlds 2020 Play-In",
+      "league": "World Championship",
+      "year": 2020,
+      "event_type": "worlds",
+      "date_start": "2020-09-25",
+      "date_end": "2020-09-30"
+    },
+    {
+      "overview_page": "2021 Mid-Season Invitational",
+      "name": "MSI 2021",
+      "league": "Mid-Season Invitational",
+      "year": 2021,
+      "event_type": "msi",
+      "date_start": "2021-05-06",
+      "date_end": "2021-05-23"
+    },
+    {
+      "overview_page": "2021 Season World Championship/Main Event",
+      "name": "Worlds 2021 Main Event",
+      "league": "World Championship",
+      "year": 2021,
+      "event_type": "worlds",
+      "date_start": "2021-10-11",
+      "date_end": "2021-11-06"
+    },
+    {
+      "overview_page": "2021 Season World Championship/Play-In",
+      "name": "Worlds 2021 Play-In",
+      "league": "World Championship",
+      "year": 2021,
+      "event_type": "worlds",
+      "date_start": "2021-10-05",
+      "date_end": "2021-10-09"
+    },
+    {
+      "overview_page": "2022 Mid-Season Invitational",
+      "name": "MSI 2022",
+      "league": "Mid-Season Invitational",
+      "year": 2022,
+      "event_type": "msi",
+      "date_start": "2022-05-10",
+      "date_end": "2022-05-29"
+    },
+    {
+      "overview_page": "2022 Season World Championship/Main Event",
+      "name": "Worlds 2022 Main Event",
+      "league": "World Championship",
+      "year": 2022,
+      "event_type": "worlds",
+      "date_start": "2022-10-07",
+      "date_end": "2022-11-05"
+    },
+    {
+      "overview_page": "2022 Season World Championship/Play-In",
+      "name": "Worlds 2022 Play-In",
+      "league": "World Championship",
+      "year": 2022,
+      "event_type": "worlds",
+      "date_start": "2022-09-29",
+      "date_end": "2022-10-04"
+    },
+    {
+      "overview_page": "2023 Mid-Season Invitational",
+      "name": "MSI 2023",
+      "league": "Mid-Season Invitational",
+      "year": 2023,
+      "event_type": "msi",
+      "date_start": "2023-05-02",
+      "date_end": "2023-05-21"
+    },
+    {
+      "overview_page": "2023 Season World Championship/Main Event",
+      "name": "Worlds 2023 Main Event",
+      "league": "World Championship",
+      "year": 2023,
+      "event_type": "worlds",
+      "date_start": "2023-10-19",
+      "date_end": "2023-11-19"
+    },
+    {
+      "overview_page": "2023 Season World Championship/Play-In",
+      "name": "Worlds 2023 Play-In",
+      "league": "World Championship",
+      "year": 2023,
+      "event_type": "worlds",
+      "date_start": "2023-10-10",
+      "date_end": "2023-10-15"
+    },
+    {
+      "overview_page": "2024 Mid-Season Invitational",
+      "name": "MSI 2024",
+      "league": "Mid-Season Invitational",
+      "year": 2024,
+      "event_type": "msi",
+      "date_start": "2024-05-01",
+      "date_end": "2024-05-19"
+    },
+    {
+      "overview_page": "2024 Season World Championship/Main Event",
+      "name": "Worlds 2024 Main Event",
+      "league": "World Championship",
+      "year": 2024,
+      "event_type": "worlds",
+      "date_start": "2024-10-03",
+      "date_end": "2024-11-02"
+    },
+    {
+      "overview_page": "2024 Season World Championship/Play-In",
+      "name": "Worlds 2024 Play-In",
+      "league": "World Championship",
+      "year": 2024,
+      "event_type": "worlds",
+      "date_start": "2024-09-25",
+      "date_end": "2024-09-29"
+    },
+    {
+      "overview_page": "2025 First Stand",
+      "name": "First Stand 2025",
+      "league": "First Stand",
+      "year": 2025,
+      "event_type": "first_stand",
+      "date_start": "2025-03-10",
+      "date_end": "2025-03-16"
+    },
+    {
+      "overview_page": "2025 Mid-Season Invitational",
+      "name": "MSI 2025",
+      "league": "Mid-Season Invitational",
+      "year": 2025,
+      "event_type": "msi",
+      "date_start": "2025-06-27",
+      "date_end": "2025-07-12"
+    },
+    {
+      "overview_page": "2025 Season World Championship/Main Event",
+      "name": "Worlds 2025 Main Event",
+      "league": "World Championship",
+      "year": 2025,
+      "event_type": "worlds",
+      "date_start": "2025-10-15",
+      "date_end": "2025-11-09"
+    },
+    {
+      "overview_page": "2025 Season World Championship/Play-In",
+      "name": "Worlds 2025 Play-In",
+      "league": "World Championship",
+      "year": 2025,
+      "event_type": "worlds",
+      "date_start": "2025-10-14",
+      "date_end": "2025-10-14"
+    },
+    {
+      "overview_page": "2026 First Stand",
+      "name": "First Stand 2026",
+      "league": "First Stand",
+      "year": 2026,
+      "event_type": "first_stand",
+      "date_start": "2026-03-16",
+      "date_end": "2026-03-22"
+    },
+    {
+      "overview_page": "2026 Mid-Season Invitational",
+      "name": "MSI 2026",
+      "league": "Mid-Season Invitational",
+      "year": 2026,
+      "event_type": "msi",
+      "date_start": "2026-06-28",
+      "date_end": "2026-07-12"
+    },
+    {
+      "overview_page": "2026 Season World Championship/Play-In",
+      "name": "Worlds 2026 Play-In",
+      "league": "World Championship",
+      "year": 2026,
+      "event_type": "worlds",
+      "date_start": "2026-10-15",
+      "date_end": "2026-10-18"
+    }
+  ],
+  "excluded": [
+    {
+      "overview_page": "CBLOL All-Star 2015",
+      "name": "CBLOL All-Star 2015",
+      "league": "Circuit Brazilian League of Legends",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "CIS All-Star Variety Show 2020",
+      "name": "CIS All-Star Variety Show 2020",
+      "league": "Riot Games",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Divine Vendetta All-Stars Cup 2020",
+      "name": "Divine Vendetta All-Stars Cup 2020",
+      "league": "Divine Vendetta All-Stars Cup",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Garena All-Star 2016",
+      "name": "Garena All-Star 2016",
+      "league": "",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Garena All-Star 2017",
+      "name": "Garena All-Star 2017",
+      "league": "Garena All-Star 2017",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "IGN ProLeague SXSW All-Stars 2012",
+      "name": "IPL 2012 SXSW All-Stars",
+      "league": "IGN Pro League",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "IGN ProLeague SXSW All-Stars 2013",
+      "name": "IPL SXSW All-Stars 2013",
+      "league": "",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship",
+      "name": "IeSF 10th Esports World Championship",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Australia",
+      "name": "IeSF 10th e-Sports Australian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Finland",
+      "name": "IeSF 10th Esports Finnish Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Georgia",
+      "name": "IeSF 10th e-Sports Georgian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Iran",
+      "name": "IeSF 10th e-Sports Iranian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Israel",
+      "name": "IeSF 10th e-Sports Israeli Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Italy",
+      "name": "IeSF 10th e-Sports Italian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Macau",
+      "name": "IeSF 10th e-Sports Macau Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Malaysia",
+      "name": "IeSF 10th e-Sports Malaysian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Mexico",
+      "name": "IeSF 10th e-Sports Mexico Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Namibia",
+      "name": "IeSF 10th e-Sports Namibian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Romania",
+      "name": "IeSF 10th e-Sports Romanian Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Sri Lanka",
+      "name": "IeSF 10th e-Sports Sri Lanka Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 10th Esports World Championship/Qualifiers/Switzerland",
+      "name": "IeSF 10th e-Sports Switzerland Qualifiers",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 2013 World Championship",
+      "name": "IeSF 2013 World Championship",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IeSF 2013 World Championship/Qualifiers/Israel",
+      "name": "League of Legends Israeli Championship 2013",
+      "league": "",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 2013 World Championship/Qualifiers/Israel/Qualifiers",
+      "name": "Israeli League of Legends Championship Qualifiers",
+      "league": "",
+      "year": null,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IeSF 7th e-Sports World Championship",
+      "name": "IeSF 7th e-Sports World Championship",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IeSF 8th e-Sports World Championship",
+      "name": "IeSF 8th e-Sports World Championship",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IeSF 9th Esports World Championship",
+      "name": "IeSF 9th Esports World Championship",
+      "league": "IeSF 2013 World Championship",
+      "year": null,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LJL 2019 Spring All-Star",
+      "name": "LJL 2019 Spring All-Star",
+      "league": "",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LMS All-Star 2016",
+      "name": "LMS All-Star 2016",
+      "league": "",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL All-Star 2019",
+      "name": "LPL All-Star 2019",
+      "league": "LPL All-Star 2019",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL All-Star 2020",
+      "name": "LPL All-Star 2020",
+      "league": "LPL All-Star 2020",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL All-Star 2021",
+      "name": "LPL All-Star 2021",
+      "league": "lpl all-star 2021",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Legacy Esports vs OPL All-Stars",
+      "name": "Legacy Esports vs OPL All-Stars",
+      "league": "Riot Games",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Rift Rivals 2017",
+      "name": "Rift Rivals 2017",
+      "league": "",
+      "year": null,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2018",
+      "name": "Rift Rivals 2018",
+      "league": "Rift Rivals 2017 LCK-LPL-LMS",
+      "year": null,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2019",
+      "name": "Rift Rivals 2019",
+      "league": "Rift Rivals 2017 LCK-LPL-LMS",
+      "year": null,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2019/NA-EU/Showmatches",
+      "name": "Rift Rivals 2019 NA-EU - Showmatches",
+      "league": "Rift Rivals 2017 NA-EU",
+      "year": null,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Teemo All-Stars Cup",
+      "name": "Teemo All-Stars Cup",
+      "league": "",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Twitch Rivals/Europe/2019 Season/All-Stars Showdown",
+      "name": "Twitch Rivals: Europe All-Stars Showdown",
+      "league": "Twitch Rivals",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Tyler1 All-Stars League of Legends Tournament",
+      "name": "Tyler1 All-Stars League of Legends Tournament",
+      "league": "",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "VCS All-Star 2018",
+      "name": "VCS All-Star 2018",
+      "league": "All-Star Las Vegas 2018",
+      "year": null,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "Season 1 World Championship/Qualifiers/Europe",
+      "name": "Worlds Season 1 Qualifier - Europe",
+      "league": "World Championship",
+      "year": 2011,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "Season 1 World Championship/Qualifiers/North America",
+      "name": "Worlds Season 1 Qualifier - NA",
+      "league": "World Championship",
+      "year": 2011,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "IEM Season VI - World Championship",
+      "name": "IEM Season 6 World Championship",
+      "league": "Intel Extreme Masters",
+      "year": 2012,
+      "reason": "IEM"
+    },
+    {
+      "overview_page": "Season 2/Regional Finals/China",
+      "name": "China Regional Finals Season 2",
+      "league": "World Championship",
+      "year": 2012,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Season 2/Regional Finals/Europe",
+      "name": "EU Regional Finals Season 2",
+      "league": "World Championship",
+      "year": 2012,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Season 2/Regional Finals/Korea",
+      "name": "Korea Regional Finals Season 2",
+      "league": "World Championship",
+      "year": 2012,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "All-Star Shanghai 2013",
+      "name": "All-Star 2013 Shanghai",
+      "league": "All-Star 2013 Shanghai",
+      "year": 2013,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "IEM Season VII - World Championship",
+      "name": "IEM Season 7 World Championship",
+      "league": "Intel Extreme Masters",
+      "year": 2013,
+      "reason": "IEM"
+    },
+    {
+      "overview_page": "Season 3 China Regional Finals",
+      "name": "China Regional Finals Season 3",
+      "league": "World Championship",
+      "year": 2013,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Season 3 Korea Regional Finals",
+      "name": "Korea Regional Finals Season 3",
+      "league": "World Championship",
+      "year": 2013,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Season 3 Taiwan Regional Finals",
+      "name": "Season 3 Taiwan Regional Finals",
+      "league": "World Championship",
+      "year": 2013,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Season 3 Taiwan Regional Finals/Hong Kong Qualifiers",
+      "name": "Season 3 Taiwan Regional Finals Hong Kong",
+      "league": "World Championship",
+      "year": 2013,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "2014 Season Garena Regional Finals",
+      "name": "Garena Regional Finals 2014",
+      "league": "World Championship",
+      "year": 2014,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2014 Season Korea Regional Finals",
+      "name": "Korea Regional Finals 2014",
+      "league": "World Championship",
+      "year": 2014,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "All-Star Paris 2014",
+      "name": "All-Star 2014 Paris",
+      "league": "All-Star 2014 Paris",
+      "year": 2014,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "IEM Season VIII - World Championship",
+      "name": "IEM Season 8 World Championship",
+      "league": "Intel Extreme Masters",
+      "year": 2014,
+      "reason": "IEM"
+    },
+    {
+      "overview_page": "LPL/2014 Season/Regional Finals",
+      "name": "China Regional Finals 2014",
+      "league": "World Championship",
+      "year": 2014,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "TCL/2014 Season/Championship/Qualifiers",
+      "name": "Turkey Regional Finals 2014",
+      "league": "World Championship",
+      "year": 2014,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "2015 Season Korea Regional Finals",
+      "name": "Korea Regional Finals 2015",
+      "league": "World Championship",
+      "year": 2015,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2015 Season Southeast Asia Regional Finals",
+      "name": "SEA Regional Finals 2015",
+      "league": "World Championship",
+      "year": 2015,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2015 Vietnam All-stars Challenger",
+      "name": "2015 Vietnam All-stars Challenger",
+      "league": "",
+      "year": 2015,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "All-Star Los Angeles 2015",
+      "name": "All-Star 2015 Los Angeles",
+      "league": "2015 All-Star Event",
+      "year": 2015,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "EU LCS/2015 Season/Regional Finals",
+      "name": "EU Regional Finals 2015",
+      "league": "World Championship",
+      "year": 2015,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IEM Season IX - World Championship",
+      "name": "IEM Season 9 World Championship",
+      "league": "Intel Extreme Masters",
+      "year": 2015,
+      "reason": "IEM"
+    },
+    {
+      "overview_page": "International Wildcard All-Star Melbourne 2015",
+      "name": "All-Star 2015 IWC Melbourne",
+      "league": "International Wildcard All-Star Melbourne 2015",
+      "year": 2015,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL/2015 Season/Regional Finals",
+      "name": "China Regional Finals 2015",
+      "league": "World Championship",
+      "year": 2015,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "NA LCS/2015 Season/Regional Finals",
+      "name": "NA Regional Finals 2015",
+      "league": "World Championship",
+      "year": 2015,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "All-Star Barcelona 2016",
+      "name": "All-Star 2016 Barcelona",
+      "league": "All-Star",
+      "year": 2016,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "EU LCS/2016 Season/Regional Finals",
+      "name": "EU Regional Finals 2016",
+      "league": "World Championship",
+      "year": 2016,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IEM Season X - World Championship",
+      "name": "IEM Season 10 World Championship",
+      "league": "Intel Extreme Masters",
+      "year": 2016,
+      "reason": "IEM"
+    },
+    {
+      "overview_page": "International Wildcard All-Star Barcelona 2016",
+      "name": "All-Star 2016 IWC Barcelona",
+      "league": "All-Star",
+      "year": 2016,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LCK/2016 Season/Regional Finals",
+      "name": "Korea Regional Finals 2016",
+      "league": "World Championship",
+      "year": 2016,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LMS/2016 Season/Regional Finals",
+      "name": "Taiwan Regional Finals 2016",
+      "league": "World Championship",
+      "year": 2016,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LPL/2016 Season/Regional Finals",
+      "name": "China Regional Finals 2016",
+      "league": "World Championship",
+      "year": 2016,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "NA LCS/2016 Season/Regional Finals",
+      "name": "NA Regional Finals 2016",
+      "league": "World Championship",
+      "year": 2016,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2017 Mid-Season Invitational",
+      "name": "MSI 2017",
+      "league": "Mid-Season Invitational",
+      "year": 2017,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "2017 Season World Championship",
+      "name": "Worlds 2017",
+      "league": "World Championship",
+      "year": 2017,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "All-Star Los Angeles 2017",
+      "name": "All-Star 2017 Los Angeles",
+      "league": "All-Star Los Angeles 2017",
+      "year": 2017,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "EU LCS/2017 Season/Regional Finals",
+      "name": "EU Regional Finals 2017",
+      "league": "World Championship",
+      "year": 2017,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "IEM Season 11/World Championship",
+      "name": "IEM Season 11 World Championship",
+      "league": "Intel Extreme Masters",
+      "year": 2017,
+      "reason": "IEM"
+    },
+    {
+      "overview_page": "LCK/2017 Season/Regional Finals",
+      "name": "Korea Regional Finals 2017",
+      "league": "World Championship",
+      "year": 2017,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LMS/2017 Season/Regional Finals",
+      "name": "Taiwan Regional Finals 2017",
+      "league": "World Championship",
+      "year": 2017,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LPL/2017 Season/Regional Finals",
+      "name": "China Regional Finals 2017",
+      "league": "World Championship",
+      "year": 2017,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "NA LCS/2017 Season/Regional Finals",
+      "name": "NA Regional Finals 2017",
+      "league": "World Championship",
+      "year": 2017,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Rift Rivals 2017/GPL-LJL-OPL",
+      "name": "Rift Rivals 2017 GPL-LJL-OPL",
+      "league": "Rift Rivals 2017 GPL-LJL-OPL",
+      "year": 2017,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2017/LCK-LPL-LMS",
+      "name": "Rift Rivals 2017 LCK-LPL-LMS",
+      "league": "Rift Rivals 2017 LCK-LPL-LMS",
+      "year": 2017,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2017/LCL-TCL",
+      "name": "Rift Rivals 2017 LCL-TCL",
+      "league": "Rift Rivals 2017 LCL-TCL",
+      "year": 2017,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2017/LLN-CLS-CBLOL",
+      "name": "Rift Rivals 2017 LLN-CLS-CBLOL",
+      "league": "Rift Rivals 2017 LLN-CLS-CBLOL",
+      "year": 2017,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2017/NA-EU",
+      "name": "Rift Rivals 2017 NA-EU",
+      "league": "Rift Rivals 2017 NA-EU",
+      "year": 2017,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "2018 Mid-Season Invitational",
+      "name": "MSI 2018",
+      "league": "Mid-Season Invitational",
+      "year": 2018,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "2018 Season World Championship",
+      "name": "Worlds 2018",
+      "league": "World Championship",
+      "year": 2018,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "All-Star Las Vegas 2018",
+      "name": "All-Star 2018 Las Vegas",
+      "league": "All-Star Las Vegas 2018",
+      "year": 2018,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "All-Star Las Vegas 2018/Regional Rivalry",
+      "name": "All-Star 2018 Las Vegas",
+      "league": "All-Star Las Vegas 2018",
+      "year": 2018,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "EU LCS/2018 Season/Regional Finals",
+      "name": "EU Regional Finals 2018",
+      "league": "World Championship",
+      "year": 2018,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LCK/2018 Season/Regional Finals",
+      "name": "Korea Regional Finals 2018",
+      "league": "World Championship",
+      "year": 2018,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LMS/2018 Season/Regional Finals",
+      "name": "Taiwan Regional Finals 2018",
+      "league": "World Championship",
+      "year": 2018,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LPL/2018 Season/Regional Finals",
+      "name": "China Regional Finals 2018",
+      "league": "World Championship",
+      "year": 2018,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "NA LCS/2018 Season/Regional Finals",
+      "name": "NA Regional Finals 2018",
+      "league": "World Championship",
+      "year": 2018,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "Rift Rivals 2018/LCK-LPL-LMS",
+      "name": "Rift Rivals 2018 LCK-LPL-LMS",
+      "league": "Rift Rivals 2017 LCK-LPL-LMS",
+      "year": 2018,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2018/LCL-TCL-VCS",
+      "name": "Rift Rivals 2018 LCL-TCL-VCS",
+      "league": "Rift Rivals 2017 LCL-TCL",
+      "year": 2018,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2018/LLN-CLS-CBLOL",
+      "name": "Rift Rivals 2018 LLN-CLS-CBLOL",
+      "league": "Rift Rivals 2018 LLN-CLS-CBLOL",
+      "year": 2018,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2018/NA-EU",
+      "name": "Rift Rivals 2018 NA-EU",
+      "league": "Rift Rivals 2017 NA-EU",
+      "year": 2018,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2018/SEA-LJL-OPL",
+      "name": "Rift Rivals 2018 SEA-LJL-OPL",
+      "league": "Rift Rivals 2018 SEA-LJL-OPL",
+      "year": 2018,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "2019 Mid-Season Invitational",
+      "name": "MSI 2019",
+      "league": "Mid-Season Invitational",
+      "year": 2019,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "2019 Season World Championship",
+      "name": "Worlds 2019",
+      "league": "World Championship",
+      "year": 2019,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "All-Star Las Vegas 2019",
+      "name": "All-Star 2019 Las Vegas",
+      "league": "All-Star Las Vegas 2018",
+      "year": 2019,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LCK/2019 Season/Regional Finals",
+      "name": "LCK 2019 Regional Finals",
+      "league": "World Championship",
+      "year": 2019,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LCS/2019 Season/Regional Finals",
+      "name": "LCS 2019 Regional Finals",
+      "league": "World Championship",
+      "year": 2019,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LEC/2019 Season/Regional Finals",
+      "name": "LEC 2019 Regional Finals",
+      "league": "World Championship",
+      "year": 2019,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LMS/2019 Season/Regional Finals",
+      "name": "LMS 2019 Regional Finals",
+      "league": "World Championship",
+      "year": 2019,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LPL/2019 Season/Regional Finals",
+      "name": "LPL 2019 Regional Finals",
+      "league": "World Championship",
+      "year": 2019,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "Rift Rivals 2019/LCK-LPL-LMS-VCS",
+      "name": "Rift Rivals 2019 LCK-LPL-LMS-VCS",
+      "league": "Rift Rivals 2017 LCK-LPL-LMS",
+      "year": 2019,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "Rift Rivals 2019/NA-EU",
+      "name": "Rift Rivals 2019 NA-EU",
+      "league": "Rift Rivals 2017 NA-EU",
+      "year": 2019,
+      "reason": "Rift Rivals"
+    },
+    {
+      "overview_page": "2020 Mid-Season Cup",
+      "name": "Mid-Season Cup 2020",
+      "league": "Mid-Season Cup 2020",
+      "year": 2020,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2020 Mid-Season Invitational",
+      "name": "MSI 2020",
+      "league": "Mid-Season Invitational",
+      "year": 2020,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "2020 Mid-Season Showdown",
+      "name": "Mid-Season Showdown 2020",
+      "league": "Riot Games",
+      "year": 2020,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2020 Mid-Season Streamathon",
+      "name": "Mid-Season Streamathon 2020",
+      "league": "Riot Games",
+      "year": 2020,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2020 Mid-Season Streamathon/Caster vs Champions",
+      "name": "Casters vs Champions",
+      "league": "Riot Games",
+      "year": 2020,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2020 Mid-Season Streamathon/Kickoff",
+      "name": "Mid-Season Streamathon 2020 Kickoff",
+      "league": "Riot Games",
+      "year": 2020,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "2020 Season World Championship",
+      "name": "Worlds 2020",
+      "league": "World Championship",
+      "year": 2020,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "All-Star 2020",
+      "name": "All-Star 2020",
+      "league": "All-Star Las Vegas 2018",
+      "year": 2020,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LCK/2020 Season/Regional Finals",
+      "name": "LCK 2020 Regional Finals",
+      "league": "World Championship",
+      "year": 2020,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LPL/2020 Season/Regional Finals",
+      "name": "LPL 2020 Regional Finals",
+      "league": "World Championship",
+      "year": 2020,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "2021 Season World Championship",
+      "name": "Worlds 2021",
+      "league": "World Championship",
+      "year": 2021,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "LCK/2021 Season/Regional Finals",
+      "name": "LCK 2021 Regional Finals",
+      "league": "World Championship",
+      "year": 2021,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LCS/2021 Season/Mid-Season Showdown",
+      "name": "LCS 2021 Mid-Season Showdown",
+      "league": "League of Legends Championship Series",
+      "year": 2021,
+      "reason": "not Worlds/MSI/First Stand"
+    },
+    {
+      "overview_page": "LPL/2021 Season/Regional Finals",
+      "name": "LPL 2021 Regional Finals",
+      "league": "World Championship",
+      "year": 2021,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "2022 Season World Championship",
+      "name": "Worlds 2022",
+      "league": "World Championship",
+      "year": 2022,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "LCK/2022 Season/Regional Finals",
+      "name": "LCK 2022 Regional Finals",
+      "league": "World Championship",
+      "year": 2022,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LPL All-Star 2022",
+      "name": "LPL All-Star 2022",
+      "league": "LPL All-Star 2022",
+      "year": 2022,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL/2022 Season/Regional Finals",
+      "name": "LPL 2022 Regional Finals",
+      "league": "World Championship",
+      "year": 2022,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LPL/2022 Season/Regional Finals/Showmatch",
+      "name": "LPL 2022 Regional Finals Showmatch",
+      "league": "World Championship",
+      "year": 2022,
+      "reason": "showmatch"
+    },
+    {
+      "overview_page": "2023 Season World Championship",
+      "name": "Worlds 2023",
+      "league": "World Championship",
+      "year": 2023,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "2023 Worlds Qualifying Series",
+      "name": "Worlds Qualifying Series 2023",
+      "league": "World Championship",
+      "year": 2023,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "LCK/2023 Season/Regional Finals",
+      "name": "LCK 2023 Regional Finals",
+      "league": "World Championship",
+      "year": 2023,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LPL All-Star 2023",
+      "name": "LPL All-Star 2023",
+      "league": "LPL All-Star 2022",
+      "year": 2023,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL/2023 Season/Regional Finals",
+      "name": "LPL 2023 Regional Finals",
+      "league": "World Championship",
+      "year": 2023,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "2024 Season World Championship",
+      "name": "Worlds 2024",
+      "league": "World Championship",
+      "year": 2024,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "Esports World Cup 2024",
+      "name": "Esports World Cup 2024",
+      "league": "Esports World Cup",
+      "year": 2024,
+      "reason": "Esports World Cup"
+    },
+    {
+      "overview_page": "LCK/2024 Season/Regional Finals",
+      "name": "LCK 2024 Regional Finals",
+      "league": "World Championship",
+      "year": 2024,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "LPL All-Star 2024",
+      "name": "LPL All-Star 2024",
+      "league": "LPL All-Star 2022",
+      "year": 2024,
+      "reason": "All-Stars"
+    },
+    {
+      "overview_page": "LPL/2024 Season/Regional Finals",
+      "name": "LPL 2024 Regional Finals",
+      "league": "World Championship",
+      "year": 2024,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "2025 Season World Championship",
+      "name": "Worlds 2025",
+      "league": "World Championship",
+      "year": 2025,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "Esports World Cup 2025",
+      "name": "Esports World Cup 2025",
+      "league": "Esports World Cup",
+      "year": 2025,
+      "reason": "Esports World Cup"
+    },
+    {
+      "overview_page": "LPL/2025 Season/Regional Finals",
+      "name": "LPL 2025 Regional Finals",
+      "league": "World Championship",
+      "year": 2025,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "2026 Mid-Season Invitational/Classic Showmatch",
+      "name": "MSI 2026: LoL Classic Showmatch",
+      "league": "LoL Classic Showmatch",
+      "year": 2026,
+      "reason": "showmatch"
+    },
+    {
+      "overview_page": "2026 Season World Championship",
+      "name": "Worlds 2026",
+      "league": "World Championship",
+      "year": 2026,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "2026 Season World Championship/Main Event",
+      "name": "Worlds 2026 Main Event",
+      "league": "World Championship",
+      "year": 2026,
+      "reason": "no played matches yet"
+    },
+    {
+      "overview_page": "Esports World Cup 2026",
+      "name": "Esports World Cup 2026",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "Esports World Cup"
+    },
+    {
+      "overview_page": "Esports World Cup 2026/Online Qualifiers/Asia-Pacific",
+      "name": "Esports World Cup 2026 Online Qualifier: Asia-Pacific",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "Esports World Cup 2026/Online Qualifiers/China",
+      "name": "Esports World Cup 2026 Online Qualifier: China",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "Esports World Cup 2026/Online Qualifiers/EMEA",
+      "name": "Esports World Cup 2026 Online Qualifier: EMEA",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "Esports World Cup 2026/Online Qualifiers/Korea",
+      "name": "Esports World Cup 2026 Online Qualifier: Korea",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "Esports World Cup 2026/Online Qualifiers/North America",
+      "name": "Esports World Cup 2026 Online Qualifier: North America",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "Esports World Cup 2026/Online Qualifiers/South America",
+      "name": "Esports World Cup 2026 Online Qualifier: South America",
+      "league": "Esports World Cup",
+      "year": 2026,
+      "reason": "qualifier"
+    },
+    {
+      "overview_page": "LPL/2026 Season/Regional Finals",
+      "name": "LPL 2026 Regional Finals",
+      "league": "World Championship",
+      "year": 2026,
+      "reason": "qualifier (IsQualifier)"
+    },
+    {
+      "overview_page": "2027 First Stand",
+      "name": "First Stand 2027",
+      "league": "First Stand",
+      "year": 2027,
+      "reason": "Year 2027 is after the current year (2026)"
+    },
+    {
+      "overview_page": "2027 Mid-Season Invitational",
+      "name": "MSI 2027",
+      "league": "Mid-Season Invitational",
+      "year": 2027,
+      "reason": "Year 2027 is after the current year (2026)"
+    },
+    {
+      "overview_page": "2027 Season World Championship",
+      "name": "Worlds 2027",
+      "league": "World Championship",
+      "year": 2027,
+      "reason": "Year 2027 is after the current year (2026)"
+    }
+  ]
+}
