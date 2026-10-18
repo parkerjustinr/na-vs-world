@@ -67,7 +67,8 @@ Login is optional but recommended, because anonymous Cargo calls are rate-limite
 - Requests are paced 2s apart and back off on errors or rate limits.
 - Before querying, the script checks its field names against Leaguepedia (`action=cargofields`). If a field it needs is missing, it stops and prints the real field list.
 - Teams whose NA status can't be determined go in `unresolved`, never guessed.
-- `--report` reads only `data/matches.json` and `data/tournaments.json`. It also lists series and game counts per tournament and flags included tournaments with 0 games.
+- 2025 LTA teams have Leaguepedia region `AME` (North and South alike), so `data/team-regions.json` decides them: under `na_overrides` → `"2025"`, set each team to `true` (NA, LTA North) or `false`. Each pull adds any such team it finds with `null` and prints it. Teams that are `null` or not listed stay in `unresolved` until you fill them in. Re-run the pull after editing.
+- `--report` reads only `data/matches.json` and `data/tournaments.json`. It also lists, per tournament, series and game counts (flagging 0 games) and NA team names. It shows the most recent NA wins vs KR and vs CN separately, and every gap over 365 days between NA game wins vs KR/CN.
 - Offline parser tests on synthetic fixtures: `python3 -m unittest discover -s scripts`
 
 ## Test URL params

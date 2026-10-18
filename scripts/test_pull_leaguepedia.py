@@ -22,7 +22,11 @@ class PullFromFixtures(unittest.TestCase):
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()
         cls.out = Path(cls.tmp.name)
-        with contextlib.redirect_stdout(io.StringIO()):
+        cls.overrides_path = cls.out / pl.TEAM_REGIONS_FILE
+        cls.overrides_path.write_text(json.dumps({"schema_version": 1, "note": "kept", "na_overrides": {
+            "2025": {"Team Liquid": True, "Vivo Keyd Stars": False}}}))
+        cls.stdout = io.StringIO()
+        with contextlib.redirect_stdout(cls.stdout):
             pl.pull(pl.FixtureClient(FIXTURES), cls.out)
         cls.matches = json.loads((cls.out / "matches.json").read_text())
         cls.tournaments = json.loads((cls.out / "tournaments.json").read_text())
@@ -79,10 +83,20 @@ class PullFromFixtures(unittest.TestCase):
         series = next(s for s in self.matches["series"] if s["match_id"] == "Worlds2024_Swiss_R1_1")
         self.assertEqual(series["date_et"], "2024-10-04")  # 02:30 UTC on Oct 5
 
-    def test_ambiguous_region_resolved_by_league(self):
+    def test_ame_region_uses_overrides(self):
         fs = [s for s in self.matches["series"] if s["tournament"] == "2025 First Stand"]
         self.assertEqual({s["na_team"] for s in fs}, {"Team Liquid"})
-        self.assertIn("Vivo Keyd Stars", {s["opponent"] for s in fs})
+        vks = next(s for s in fs if s["opponent"] == "Vivo Keyd Stars")
+        self.assertEqual(vks["opponent_region_raw"], "AME")
+
+    def test_missing_ame_team_seeded_with_null_and_printed(self):
+        doc = json.loads(self.overrides_path.read_text())
+        self.assertEqual(doc["note"], "kept")
+        self.assertEqual(doc["na_overrides"]["2025"],
+                         {"Team Liquid": True, "Unknown Americas Team": None, "Vivo Keyd Stars": False})
+        self.assertIn("  2025: Unknown Americas Team", self.stdout.getvalue())
+        reason = next(u["reason"] for u in self.matches["unresolved"] if u["team"] == "Unknown Americas Team")
+        self.assertIn('team-regions.json na_overrides["2025"] for this team needs true or false', reason)
 
     def test_unresolved_never_guessed(self):
         teams = {u["team"] for u in self.matches["unresolved"]}
@@ -104,6 +118,30 @@ class PullFromFixtures(unittest.TestCase):
             pl.pull(pl.FixtureClient(FIXTURES), self.out)
         self.assertEqual((self.out / "matches.json").read_text(), before)
 
+    def test_report_gaps_and_teams(self):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            pl.report(self.out)
+        out = buf.getvalue()
+        # KR/CN wins: 2024-10-05, 2025-03-11, 2026-07-11 (x2), 2026-10-16 -> one gap over 365 days.
+        section7 = out.split("\n7.")[1].split("\n8.")[0]
+        self.assertIn("  487 days\n", section7)
+        self.assertIn("from 2025-03-11  Team Liquid vs Hanwha Life Esports", section7)
+        self.assertIn("to   2026-07-11  LYON vs Hanwha Life Esports [Korea]  G2 W", section7)
+        self.assertNotIn("157 days", section7)
+        self.assertIn("(5 KR/CN game wins", section7)
+        section6 = out.split("\n6.")[1].split("\n7.")[0]
+        self.assertIn("matched as KR: ['Korea']", section6)
+        self.assertIn("matched as CN: ['China']", section6)
+        cn = section6.split("  CN\n")[1]
+        self.assertIn("2026-10-16  Team Liquid vs Top Esports [China]  G2 W", cn)
+        kr = section6.split("  KR\n")[1].split("  CN\n")[0]
+        self.assertIn("2026-07-11  LYON vs Hanwha Life Esports [Korea]  G3 W", kr)
+        section8 = out.split("\n8.")[1]
+        self.assertIn("2024 Season World Championship/Main Event: FlyQuest, Team Liquid\n"
+                      "      unresolved here: Mystery Squad", section8)
+        self.assertIn("2025 First Stand: Team Liquid\n      unresolved here: Unknown Americas Team", section8)
+
     def test_report_runs(self):
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
@@ -112,6 +150,26 @@ class PullFromFixtures(unittest.TestCase):
         self.assertIn("Total NA games: 9-10", out)
         self.assertIn("! 2024 Season World Championship ", out)  # parent page: duplicates only
         self.assertIn("1 included tournament(s) with 0 NA games", out)
+
+
+class TeamRegionsFile(unittest.TestCase):
+    def run_pull(self, out):
+        with contextlib.redirect_stdout(io.StringIO()):
+            pl.pull(pl.FixtureClient(FIXTURES), out)
+        return json.loads((out / "matches.json").read_text())
+
+    def test_no_file_seeds_every_ame_team_null_and_resolves_none(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            matches = self.run_pull(out)
+            doc = json.loads((out / pl.TEAM_REGIONS_FILE).read_text())
+            self.assertEqual(doc["na_overrides"], {"2025": {
+                "Team Liquid": None, "Unknown Americas Team": None, "Vivo Keyd Stars": None}})
+            self.assertFalse(any(s["tournament"] == "2025 First Stand" for s in matches["series"]))
+            # Second run: listed but null is still unresolved, and nothing changes.
+            before = (out / "matches.json").read_text()
+            self.run_pull(out)
+            self.assertEqual((out / "matches.json").read_text(), before)
 
 
 class FakeResponse:

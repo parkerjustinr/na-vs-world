@@ -57,10 +57,11 @@ specific page wins.
 
 How NA status is decided (never guessed):
     * Region in NA_REGIONS ("North America", ...)  -> NA
-    * Region in AMBIGUOUS_REGIONS ("Americas", "LTA") -> look the team up in
-      that year's top-league rosters (TOP_LEAGUE_PAGES, e.g. LTA North vs.
-      LTA South in 2025). Found in North only -> NA. South only -> not NA.
-      Anything else -> unresolved.
+    * Region in AMBIGUOUS_REGIONS ("AME", the 2025 LTA region, and
+      "Americas"/"LTA") -> data/team-regions.json decides:
+      na_overrides["<year>"]["<team>"] true -> NA, false -> not NA.
+      null, or not listed -> unresolved. A team that isn't listed is added
+      to the file with null and printed, so its value can be filled in by hand.
     * Empty region, or no TournamentRosters row -> unresolved.
     * Any other non-empty region -> not NA. Every distinct region string is
       printed at the end of a run so this can be checked.
@@ -148,15 +149,15 @@ CANDIDATE_LIKES = ["World Championship", "Mid-Season", "First Stand",
                    "All-Star", "Rift Rivals", "Esports World Cup"]
 
 NA_REGIONS = {"north america", "na", "lta north"}
-AMBIGUOUS_REGIONS = {"americas", "lta"}
-# Year -> (OverviewPage prefixes of NA top-league pages, prefixes of non-NA
-# pages that share an ambiguous region). Used only for ambiguous regions.
-TOP_LEAGUE_PAGES = {
-    2025: (["LTA North/"], ["LTA South/"]),
-    2026: (["LCS/"], []),
-}
+# Regions that don't say which league a team came from: "AME" is what
+# Leaguepedia records for 2025 LTA teams, North and South alike. A team with
+# one of these is NA only if data/team-regions.json says so (na_overrides).
+AMBIGUOUS_REGIONS = {"ame", "americas", "lta"}
+TEAM_REGIONS_FILE = "team-regions.json"
 
-KOREAN_CHINESE = re.compile(r"korea|china|chinese|\bkr\b|\bcn\b|\blck\b|\blpl\b", re.I)
+KOREAN = re.compile(r"korea|\bkr\b|\blck\b", re.I)
+CHINESE = re.compile(r"china|chinese|\bcn\b|\blpl\b", re.I)
+GAP_DAYS = 365
 
 
 class CargoError(RuntimeError):
@@ -517,23 +518,17 @@ def same_team(a, b):
 
 
 class RegionResolver:
-    def __init__(self, roster_rows, league_rows, tournaments):
+    def __init__(self, roster_rows, na_overrides, tournaments, overrides_path):
         self.regions = {}
         for row in roster_rows:
             key = (row.get("OverviewPage", ""), (row.get("Team") or "").strip().casefold())
             self.regions.setdefault(key, (row.get("Team", ""), (row.get("Region") or "").strip()))
-        self.league_hits = defaultdict(set)  # (year, team) -> {"na", "non_na"}
-        for row in league_rows:
-            year = to_int(row.get("Year"))
-            north, south = TOP_LEAGUE_PAGES.get(year, ([], []))
-            page = row.get("OverviewPage", "")
-            team = (row.get("Team") or "").strip().casefold()
-            if any(page.startswith(p) for p in north):
-                self.league_hits[(year, team)].add("na")
-            if any(page.startswith(p) for p in south):
-                self.league_hits[(year, team)].add("non_na")
+        self.overrides = {str(year): {team.strip().casefold(): value for team, value in teams.items()}
+                          for year, teams in (na_overrides or {}).items()}
+        self.overrides_path = overrides_path
         self.year = {t["overview_page"]: t["year"] for t in tournaments}
         self.unresolved = {}
+        self.missing_overrides = set()  # (year, team) for ambiguous teams not in the file
         self.region_strings = Counter(region or "(empty)" for _, region in self.regions.values())
 
     def region_raw(self, page, team):
@@ -553,40 +548,48 @@ class RegionResolver:
             return "na"
         if lowered not in AMBIGUOUS_REGIONS:
             return "non_na"
-        year = self.year.get(page)
-        if year not in TOP_LEAGUE_PAGES:
-            return self._unresolved(team, page, f"region '{region}' is ambiguous and no top-league check is defined for {year}")
-        hits = self.league_hits.get((year, (team or "").strip().casefold()), set())
-        if hits == {"na"}:
+        year = str(self.year.get(page))
+        where = f'{self.overrides_path.name} na_overrides["{year}"]'
+        overrides = self.overrides.get(year, {})
+        key = (team or "").strip().casefold()
+        if key not in overrides:
+            self.missing_overrides.add((year, hit[0] or team))
+        value = overrides.get(key)
+        if value is True:
             return "na"
-        if hits == {"non_na"}:
+        if value is False:
             return "non_na"
-        detail = "on both NA and non-NA league rosters" if hits else "not on any listed top-league roster"
-        return self._unresolved(team, page, f"region '{region}' is ambiguous and team is {detail} in {year}")
+        # Same reason for missing and null, so seeding the file doesn't change matches.json.
+        detail = "needs true or false" if value is None else f"is {value!r}, not true or false"
+        return self._unresolved(team, page, f"region '{region}': {where} for this team {detail}")
 
     def _unresolved(self, team, page, reason):
         self.unresolved[(page, team)] = {"team": team, "tournament": page, "reason": reason}
         return "unresolved"
 
 
-def fetch_league_rosters(client, tournaments, roster_rows):
-    """Top-league rosters for years where some international team has an ambiguous region."""
-    years = {t["year"] for t in tournaments}
-    ambiguous_pages = {r.get("OverviewPage") for r in roster_rows
-                       if (r.get("Region") or "").strip().casefold() in AMBIGUOUS_REGIONS}
-    years = sorted(y for y in years if y in TOP_LEAGUE_PAGES and any(
-        t["year"] == y and t["overview_page"] in ambiguous_pages for t in tournaments))
-    rows = []
-    for year in years:
-        north, south = TOP_LEAGUE_PAGES[year]
-        likes = " OR ".join(f'TR.OverviewPage LIKE "{p}%"' for p in north + south)
-        rows += cargo_rows(client, f"league_rosters_{year}",
-                           "TournamentRosters=TR,Tournaments=T",
-                           "TR.Team=Team,TR.OverviewPage=OverviewPage,T.Year=Year",
-                           f"T.Year={year} AND ({likes})",
-                           "TR.OverviewPage, TR.Team",
-                           join_on="TR.OverviewPage=T.OverviewPage")
-    return rows
+def load_team_regions(path):
+    if not path.exists():
+        return {"schema_version": 1, "na_overrides": {}}
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise CargoError(f"{path} is not valid JSON: {exc}")
+    if not isinstance(doc.get("na_overrides", {}), dict):
+        raise CargoError(f"{path}: na_overrides must be an object")
+    doc.setdefault("na_overrides", {})
+    return doc
+
+
+def seed_team_regions(path, doc, missing):
+    """Add missing (year, team) pairs with null, keep every existing value, write sorted."""
+    overrides = doc["na_overrides"]
+    for year, team in missing:
+        overrides.setdefault(year, {}).setdefault(team, None)
+    doc["na_overrides"] = {year: dict(sorted(overrides[year].items(), key=lambda kv: kv[0].casefold()))
+                           for year in sorted(overrides)}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def build_matches(tournaments, match_rows, game_rows, resolver, tz):
@@ -734,14 +737,16 @@ def pull(client, data_dir):
     print("\nFetching rosters and games...")
     rosters = rows_for_pages(client, "rosters", "TournamentRosters", fields["TournamentRosters"],
                              pages, "TR.OverviewPage, TR.Team")
-    league_rosters = fetch_league_rosters(client, included, rosters)
     game_rows = rows_for_pages(client, "games", "ScoreboardGames", fields["ScoreboardGames"],
                                pages, "SG.DateTime_UTC, SG.GameId")
 
-    resolver = RegionResolver(rosters, league_rosters, included)
+    overrides_path = data_dir / TEAM_REGIONS_FILE
+    team_regions = load_team_regions(overrides_path)
+    resolver = RegionResolver(rosters, team_regions["na_overrides"], included, overrides_path)
     for r in rosters:  # resolve every roster team, not only ones in NA matches
         resolver.status(r.get("OverviewPage", ""), r.get("Team", ""))
     series, games, unresolved, notes = build_matches(included, match_rows, game_rows, resolver, tz)
+    seed_team_regions(overrides_path, team_regions, resolver.missing_overrides)
 
     write_json_stable(data_dir / "matches.json", {
         "schema_version": 1, "generated_utc": now_utc(), "source": "Leaguepedia Cargo API",
@@ -759,6 +764,11 @@ def pull(client, data_dir):
             print(f"  {item}")
         if len(items) > 20:
             print(f"  ... {len(items) - 20} more")
+    if resolver.missing_overrides:
+        print(f"\nAMBIGUOUS-REGION TEAMS MISSING FROM {overrides_path} "
+              f"(added with null; set true for NA, false otherwise):")
+        for year, team in sorted(resolver.missing_overrides):
+            print(f"  {year}: {team}")
     if unresolved:
         print(f"\nUNRESOLVED ({len(unresolved)}):")
         for u in unresolved:
@@ -847,23 +857,54 @@ def report(data_dir):
     if not hits:
         print("  (none)")
 
+    def is_kr_cn(region):
+        return bool(KOREAN.search(region or "") or CHINESE.search(region or ""))
+
+    def series_line(s):
+        return (f"  {s['date_et']}  {s['na_team']} {s['na_score']}-{s['opp_score']} {s['opponent']} "
+                f"[{s['opponent_region_raw']}]  ({s['tournament']}, {s['stage']})")
+
+    regions = {x["opponent_region_raw"] or "" for x in series + games}
     print("\n6. Most recent NA wins vs opponents whose raw region looks Korean or Chinese")
-    matched = sorted({x["opponent_region_raw"] for x in series + games
-                      if KOREAN_CHINESE.search(x["opponent_region_raw"] or "")})
-    print(f"  raw region strings matched: {matched or '(none)'}")
-    unmatched = sorted({x["opponent_region_raw"] for x in series + games
-                        if not KOREAN_CHINESE.search(x["opponent_region_raw"] or "")})
-    print(f"  raw region strings not matched: {unmatched or '(none)'}")
-    kc_games = [g for g in won if KOREAN_CHINESE.search(g["opponent_region_raw"] or "")]
-    kc_series = [s for s in series if s["result"] == "W"
-                 and KOREAN_CHINESE.search(s["opponent_region_raw"] or "")]
-    print("  game:  " + (game_line(kc_games[-1]).strip() if kc_games else "(none)"))
-    if kc_series:
-        s = kc_series[-1]
-        print(f"  series: {s['date_et']}  {s['na_team']} {s['na_score']}-{s['opp_score']} "
-              f"{s['opponent']} [{s['opponent_region_raw']}]  ({s['tournament']}, {s['stage']})")
-    else:
-        print("  series: (none)")
+    print(f"  raw region strings matched as KR: {sorted(r for r in regions if KOREAN.search(r)) or '(none)'}")
+    print(f"  raw region strings matched as CN: {sorted(r for r in regions if CHINESE.search(r)) or '(none)'}")
+    print(f"  raw region strings not matched:   {sorted(r for r in regions if not is_kr_cn(r)) or '(none)'}")
+    for label, test in (("KR or CN", is_kr_cn), ("KR", KOREAN.search), ("CN", CHINESE.search)):
+        kc_games = [g for g in won if test(g["opponent_region_raw"] or "")]
+        kc_series = [s for s in series if s["result"] == "W" and test(s["opponent_region_raw"] or "")]
+        print(f"  {label}")
+        print("    game:  " + (game_line(kc_games[-1]).strip() if kc_games else "(none)"))
+        print("    series:" + (series_line(kc_series[-1])[1:] if kc_series else " (none)"))
+
+    print(f"\n7. Gaps over {GAP_DAYS} days between consecutive NA game wins vs KR/CN (ET dates)")
+    kc_wins = [g for g in won if is_kr_cn(g["opponent_region_raw"]) and g["date_et"]]
+    day = lambda g: datetime.strptime(g["date_et"], "%Y-%m-%d").date()
+    gaps = [(prev, nxt, (day(nxt) - day(prev)).days) for prev, nxt in zip(kc_wins, kc_wins[1:])]
+    long_gaps = [gap for gap in gaps if gap[2] > GAP_DAYS]
+    for prev, nxt, days in long_gaps:
+        print(f"  {days} days")
+        print(f"    from {game_line(prev).strip()}")
+        print(f"    to   {game_line(nxt).strip()}")
+    if not long_gaps:
+        print("  (none)")
+    if kc_wins:
+        today = datetime.now(eastern()).date()
+        days = (today - day(kc_wins[-1])).days
+        print(f"  open: {days} days from the last win ({kc_wins[-1]['date_et']}) to today ({today.isoformat()})")
+    print(f"  ({len(kc_wins)} KR/CN game wins; days = end date minus start date)")
+
+    print("\n8. NA teams per included tournament (check for missing teams)")
+    na_teams, unresolved_teams = defaultdict(set), defaultdict(set)
+    for s in series:
+        na_teams[s["tournament"]].add(s["na_team"])
+    for u in data.get("unresolved", []):
+        unresolved_teams[u["tournament"]].add(u["team"])
+    for page in sorted(years, key=lambda p: (years[p] or 0, p)):
+        teams = ", ".join(sorted(na_teams[page], key=str.casefold)) or "(none)"
+        print(f"  {page}: {teams}")
+        if unresolved_teams[page]:
+            print(f"      unresolved here: {', '.join(sorted(unresolved_teams[page], key=str.casefold))}")
+    print("  (from series against non-NA opponents; an NA team with only NA-vs-NA matches won't appear)")
 
 
 def main(argv=None):
