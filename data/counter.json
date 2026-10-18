@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-17",
+  "definition": "Days since an LCS team won a game against an LCK or LPL team at a Riot international (Worlds, MSI, First Stand). Games, not series. ET dates.",
+  "last_win": {
+    "date_et": "2026-07-11",
+    "game_end_utc": null,
+    "na_team": "LYON",
+    "opponent": "Hanwha Life Esports",
+    "opponent_league": "LCK",
+    "event": "MSI 2026",
+    "stage": "lower bracket final",
+    "games_won": [2, 3],
+    "series_score": "2-3",
+    "series_result": "loss",
+    "sources": ["gol.gg", "Sheep Esports"]
+  },
+  "context": {
+    "previous_drought_days": 1089,
+    "verified": false,
+    "note": "Endpoints unconfirmed. Do not render until verified."
+  }
+}
