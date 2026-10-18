@@ -18,6 +18,15 @@
       "losses": 0,
       "status": "alive",
       "next": { "round": 1, "opponent": null, "placeholder": "draw Oct 18", "format": "Bo1", "date": "2026-10-23" }
+    },
+    {
+      "name": "Cloud9",
+      "seed": "LCS3",
+      "wins": 0,
+      "losses": 2,
+      "status": "eliminated",
+      "out_stage": "Play-In",
+      "line": "Took three games off Karmine Corp and FURIA."
     }
   ]
 }

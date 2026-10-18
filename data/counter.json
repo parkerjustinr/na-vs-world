@@ -16,8 +16,11 @@
     "sources": ["gol.gg", "Sheep Esports"]
   },
   "context": {
-    "previous_drought_days": 1089,
-    "verified": false,
-    "note": "Endpoints unconfirmed. Do not render until verified."
+    "longest_drought_days": 377,
+    "longest_drought_from": "2023-05-04",
+    "longest_drought_to": "2024-05-15",
+    "label": "2023-24",
+    "verified": true,
+    "source": "Leaguepedia Cargo pull, Oct 18, 2026"
   }
 }

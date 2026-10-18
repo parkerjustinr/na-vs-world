@@ -95,9 +95,12 @@ function renderCounter(data, params) {
     result + ' the series ' + w.series_score + '.';
 
   var ctx = data.context;
-  if (ctx && ctx.verified === true) {
+  if (!celebrating && ctx && ctx.verified === true) {
     var line = document.getElementById('context-line');
-    line.textContent = 'The last drought ran ' + ctx.previous_drought_days + ' days.';
+    var rec = ctx.longest_drought_days + ' days (' + ctx.label + ').';
+    line.textContent = n > ctx.longest_drought_days
+      ? 'Past the old record of ' + rec
+      : 'Longest drought: ' + rec;
     line.hidden = false;
   }
 
@@ -118,10 +121,16 @@ function renderCounter(data, params) {
 function renderWorlds(data) {
   var list = document.getElementById('teams');
   data.teams.forEach(function (t) {
-    var card = el('article', 'card');
+    var out = t.status === 'eliminated';
+    var card = el('article', out ? 'card out' : 'card');
     card.appendChild(el('h3', 'team', t.name));
     card.appendChild(el('p', 'record', t.wins + '-' + t.losses));
-    card.appendChild(el('p', 'status', t.status));
+    if (out) {
+      card.appendChild(el('p', 'status', 'Out in the ' + t.out_stage + '.'));
+      if (t.line) card.appendChild(el('p', 'line', t.line));
+    } else {
+      card.appendChild(el('p', 'status', t.status === 'alive' ? 'Alive' : t.status));
+    }
 
     if (t.status === 'alive' && t.next) {
       var next = el('p', 'next');
@@ -138,8 +147,6 @@ function renderWorlds(data) {
       }
     } else if (t.status === 'advanced') {
       card.appendChild(el('p', 'next', 'Into the knockouts.'));
-    } else if (t.status === 'eliminated') {
-      card.appendChild(el('p', 'next', 'Out at ' + t.wins + '-' + t.losses + '.'));
     }
     list.appendChild(card);
   });

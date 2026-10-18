@@ -113,6 +113,11 @@ p { margin: 0 0 0.5rem; }
   color: var(--muted);
 }
 
+.card.out { opacity: 0.7; border-style: dashed; }
+.card.out .status { text-transform: none; }
+
+.line { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+
 .chip {
   display: inline-block;
   padding: 0 0.45rem;
