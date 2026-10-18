@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-17",
+  "stage": "Swiss",
+  "teams": [
+    {
+      "name": "Team Liquid",
+      "seed": "LCS1",
+      "wins": 0,
+      "losses": 0,
+      "status": "alive",
+      "next": { "round": 1, "opponent": null, "placeholder": "draw Oct 18", "format": "Bo1", "date": "2026-10-23" }
+    },
+    {
+      "name": "LYON",
+      "seed": "LCS2",
+      "wins": 0,
+      "losses": 0,
+      "status": "alive",
+      "next": { "round": 1, "opponent": null, "placeholder": "draw Oct 18", "format": "Bo1", "date": "2026-10-23" }
+    }
+  ]
+}

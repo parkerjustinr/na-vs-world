@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>lcsfan.gg</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <section id="hero" class="hero" aria-live="polite">
+      <div id="confetti" class="confetti" aria-hidden="true"></div>
+      <h1 id="celebrate-heading" class="celebrate-heading" hidden>NA takes a game.</h1>
+      <div id="counter-body">
+        <p id="count" class="count">&nbsp;</p>
+        <p class="label">days since an LCS team won a game against an LCK or LPL team at a Riot international.</p>
+        <p id="anchor-1" class="anchor"></p>
+        <p id="anchor-2" class="anchor"></p>
+        <p id="context-line" class="context" hidden></p>
+      </div>
+      <p id="counter-error" class="error" hidden>Data didn't load.</p>
+      <p class="home-soil">Worlds is in the US this year.</p>
+    </section>
+
+    <section id="worlds" class="worlds">
+      <h2>This Worlds</h2>
+      <div id="teams" class="teams"></div>
+      <p id="worlds-error" class="error" hidden>Data didn't load.</p>
+      <p id="worlds-updated" class="updated"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>lcsfan.gg was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</p>
+    <p>Fan project. Results checked by hand against public match records.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
