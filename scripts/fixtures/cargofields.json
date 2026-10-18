@@ -1,0 +1,6 @@
+{
+  "Tournaments": ["Name", "OverviewPage", "League", "Region", "Year", "DateStart", "Date", "TournamentLevel", "IsQualifier", "IsOfficial"],
+  "TournamentRosters": ["Team", "OverviewPage", "Region", "RosterLinks", "Roles"],
+  "MatchSchedule": ["MatchId", "OverviewPage", "Team1", "Team2", "Winner", "Team1Score", "Team2Score", "BestOf", "DateTime_UTC", "Tab", "Round", "IsNullified", "FF"],
+  "ScoreboardGames": ["GameId", "MatchId", "OverviewPage", "Tournament", "Team1", "Team2", "WinTeam", "LossTeam", "Winner", "DateTime_UTC", "N_GameInMatch"]
+}

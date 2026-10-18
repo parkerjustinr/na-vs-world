@@ -45,6 +45,23 @@ One entry per LCS team, in display order. For each team update `wins`, `losses` 
 
 Swiss format rule: `Bo3` when wins or losses equal 2, otherwise `Bo1`. The page logs a console warning if `next.format` disagrees.
 
+## Pulling data
+
+`scripts/pull_leaguepedia.py` pulls every series and game an NA team played at a Riot international (Worlds from 2011, MSI from 2015, First Stand from 2025) from Leaguepedia's Cargo API. It writes `data/tournaments.json` (which events were included or excluded, and why) and `data/matches.json`. Its only dependency is `requests`.
+
+```sh
+pip install requests
+python3 scripts/pull_leaguepedia.py
+python3 scripts/pull_leaguepedia.py --report
+```
+
+- Raw API responses are cached in `scripts/.cache/` (gitignored). `--refresh` ignores the cache.
+- Requests are paced 2s apart and back off on errors or rate limits.
+- Before querying, the script checks its field names against Leaguepedia (`action=cargofields`). If a field it needs is missing, it stops and prints the real field list.
+- Teams whose NA status can't be determined go in `unresolved`, never guessed.
+- `--report` reads only `data/matches.json`.
+- Offline parser tests on synthetic fixtures: `python3 -m unittest discover -s scripts`
+
 ## Test URL params
 
 - `?today=YYYY-MM-DD` uses that date as today (ET) for the counter.
