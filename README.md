@@ -33,7 +33,7 @@ When an LCS team wins a game against an LCK or LPL team at a Riot international,
 - `series_result`: `"win"` or `"loss"`.
 - `sources`: where the result was checked.
 
-`context.previous_drought_days` is shown only when `context.verified` is `true`.
+`context` (`longest_drought_days`, `longest_drought_from`, `longest_drought_to`, `label`, `source`) is shown only when `context.verified` is `true`, and never in celebration mode. Once the counter passes `longest_drought_days`, the line reads "Past the old record of N days (label)."
 
 ### `data/worlds2026.json`
 
@@ -41,7 +41,7 @@ One entry per LCS team, in display order. For each team update `wins`, `losses` 
 
 - `"alive"`: fill `next` (`round`, `opponent`, `format`, `date`). If the opponent is not drawn yet, set `opponent` to `null` and put the text to show in `placeholder`.
 - `"advanced"`: shows "Into the knockouts."
-- `"eliminated"`: shows "Out at W-L."
+- `"eliminated"`: set `out_stage` (e.g. `"Play-In"`) and optionally `line`. Shows "Out in the {out_stage}." and the line; the card is muted.
 
 Swiss format rule: `Bo3` when wins or losses equal 2, otherwise `Bo1`. The page logs a console warning if `next.format` disagrees.
 
