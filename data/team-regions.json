@@ -2,6 +2,12 @@
   "schema_version": 1,
   "note": "Teams whose Leaguepedia region doesn't say which league they came from (AME = 2025 LTA, North and South alike). true = NA (LTA North), false = not NA. The pull script adds every such team it finds with null; null or missing teams go in matches.json 'unresolved'.",
   "na_overrides": {
-    "2025": {}
+    "2025": {
+      "100 Thieves": true,
+      "FlyQuest": true,
+      "FURIA": false,
+      "Team Liquid": true,
+      "Vivo Keyd Stars": false
+    }
   }
 }
