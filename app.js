@@ -34,6 +34,13 @@ function formatDate(ymd) {
   return MONTHS[p.m - 1] + ' ' + p.d + ', ' + p.y;
 }
 
+// '2026-10-23' -> 'Oct 23'
+function formatShortDate(ymd) {
+  var p = parseYMD(ymd);
+  if (!p) return ymd || '';
+  return MONTHS[p.m - 1].slice(0, 3) + ' ' + p.d;
+}
+
 function gamesWonText(games) {
   if (!games || !games.length) return '';
   if (games.length === 1) return 'game ' + games[0];
@@ -121,7 +128,7 @@ function renderWorlds(data) {
       next.appendChild(document.createTextNode(
         'Next: ' + (t.next.opponent || t.next.placeholder) + ' '));
       next.appendChild(el('span', 'chip', t.next.format));
-      next.appendChild(document.createTextNode(' ' + formatDate(t.next.date)));
+      next.appendChild(document.createTextNode(' ' + formatShortDate(t.next.date)));
       card.appendChild(next);
 
       var want = expectedFormat(t.wins, t.losses);
